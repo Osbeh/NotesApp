@@ -58,7 +58,7 @@ function App() {
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<NoteList/>}></Route>
+        <Route path="/" element={<NoteList notes={notesWithTages} availableTags={tags}/>}></Route>
         <Route path="/new" element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags}/>}></Route>
         <Route path="/:id">
           <Route index element={<h1>Show</h1>}/>
