@@ -58,6 +58,24 @@ function App() {
     setTags(prev => [...prev, tag])
   }
 
+  const updateTag = (id:string, label:string) => {
+    setTags(prevTags => {
+      return prevTags.map(tag => {
+        if (tag.id === id) {
+          return  { ...tag, label}
+        } else {
+          return tag
+        }
+      })
+    })
+  }
+
+  const deleteTag = (id:string) => {
+    setTags(prevTags => {
+      return prevTags.filter(tag => tag.id !== id)
+    })
+  }
+
   const onUpdateNote = ( id: string, {tags, ...data}:NoteData) => {
     setNotes(prevNotes => {
       return prevNotes.map(note => {
@@ -70,13 +88,26 @@ function App() {
     })
   }
 
+  const onDeleteNote = (id:string) => {
+    setNotes(prevNotes => {
+      return prevNotes.filter(note => note.id !== id)
+    })
+  }
+
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<NoteList notes={notesWithTages} availableTags={tags}/>}></Route>
+        <Route path="/" element={
+          <NoteList 
+            notes={notesWithTages} 
+            availableTags={tags}
+            updateTag={updateTag}
+            deleteTag={deleteTag}
+          />}>
+        </Route>
         <Route path="/new" element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags}/>}></Route>
         <Route path="/:id" element={<NoteLayout notes={notesWithTages}/>}>
-          <Route index element={<Note/>}/>
+          <Route index element={<Note onDelete={onDeleteNote}/>}/>
           <Route path="edit" element={<EditNote
             onSubmit={onUpdateNote}
             onAddTag={addTag} 
