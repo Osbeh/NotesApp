@@ -6,6 +6,9 @@ import { NewNote } from "./components/NewNote"
 import { useLocalStorage } from "./components/useLocalStorage"
 import { v4 as uuidV4 } from "uuid"
 import { NoteList } from "./components/NoteList"
+import { NoteLayout } from "./components/NoteLayout"
+import { Note } from "./components/Note"
+import { EditNote } from "./components/EditNote"
 
 export type Note = {
   id: string,
@@ -55,14 +58,30 @@ function App() {
     setTags(prev => [...prev, tag])
   }
 
+  const onUpdateNote = ( id: string, {tags, ...data}:NoteData) => {
+    setNotes(prevNotes => {
+      return prevNotes.map(note => {
+        if (note.id === id) {
+          return {...note, ...data, tagIds: tags.map(tag => tag.id)}
+        } else {
+          return note
+        }
+      })
+    })
+  }
+
   return (
     <Container className="my-4">
       <Routes>
         <Route path="/" element={<NoteList notes={notesWithTages} availableTags={tags}/>}></Route>
         <Route path="/new" element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags}/>}></Route>
-        <Route path="/:id">
-          <Route index element={<h1>Show</h1>}/>
-          <Route path="edit" element={<h1>Edit</h1>}/>
+        <Route path="/:id" element={<NoteLayout notes={notesWithTages}/>}>
+          <Route index element={<Note/>}/>
+          <Route path="edit" element={<EditNote
+            onSubmit={onUpdateNote}
+            onAddTag={addTag} 
+            availableTags={tags}
+          />}/>
         </Route>
         <Route path="*" element={<Navigate to="/"/>}></Route>
       </Routes>
