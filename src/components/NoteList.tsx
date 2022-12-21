@@ -3,6 +3,7 @@ import { Row, Col, Stack, Button, Form, Card, Badge, Modal, ModalBody } from "re
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select"
 import { Tag } from "../App";
+import { EditTagsModal } from "./EditTagsModal";
 import styles from "./NotesLists.module.css"
 
 
@@ -15,14 +16,6 @@ type SimplifiedNote = {
 type NoteListProps = {
     availableTags: Tag[],
     notes: SimplifiedNote[]
-    deleteTag: (id:string) => void
-    updateTag: (id:string, label:string) => void
-}
-
-type EditTagsModalProps = {
-    show: boolean,
-    availableTags: Tag[],
-    handleClose: () => void
     deleteTag: (id:string) => void
     updateTag: (id:string, label:string) => void
 }
@@ -118,26 +111,3 @@ function NoteCard({ id, title, tags }: SimplifiedNote) {
     </Card>
 }
 
-function EditTagsModal({ availableTags, show, handleClose, deleteTag, updateTag}: EditTagsModalProps) {
-    return <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-            <Modal.Title>Edit tags</Modal.Title>
-        </Modal.Header>
-        <ModalBody>
-            <Form>
-                <Stack gap={2}>
-                    {availableTags.map(tag => (
-                        <Row key={tag.id}>
-                            <Col>
-                                <Form.Control type="text" value={tag.label} onChange={e => updateTag(tag.id, e.target.value)}/>
-                            </Col>
-                            <Col xs="auto">
-                                <Button variant="outline-danger" onClick={() => deleteTag(tag.id)}>&times;</Button>
-                            </Col>
-                        </Row>
-                    ))}
-                </Stack>
-            </Form>
-        </ModalBody>
-    </Modal>
-}
